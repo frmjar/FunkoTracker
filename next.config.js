@@ -1,5 +1,7 @@
 // next.config.js
 module.exports = {
-  images: {},
+  images: {
+    unoptimized: true,
+  },
   output: "export"
 };
