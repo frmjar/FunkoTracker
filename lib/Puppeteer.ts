@@ -5,12 +5,14 @@ import chromium from '@sparticuz/chromium'
 export default class Puppeteer {
   private browser: Browser | null
   private context: BrowserContext | null
+  private client: any
   private latitude?: string
   private longitude?: string
 
   constructor(latitude?: string, longitude?: string) {
     this.browser = null
     this.context = null
+    this.client = null
     this.latitude = latitude
     this.longitude = longitude
   }
@@ -18,7 +20,7 @@ export default class Puppeteer {
   async init(): Promise<void> {
     try {
       this.browser = await puppeteer.launch({
-        args: chromium.args,
+        args: [...chromium.args, '--lang=es-ES,es'],
         defaultViewport: chromium.defaultViewport,
         executablePath: await chromium.executablePath(),
         headless: chromium.headless,
@@ -68,6 +70,18 @@ export default class Puppeteer {
       Object.defineProperty(navigator, 'language', { get: () => 'es-ES' })
       Object.defineProperty(navigator, 'languages', { get: () => ['es-ES', 'es'] })
     })
+
+    this.client = await page.target().createCDPSession()
+
+    if (this.latitude && this.longitude) {
+      await this.client.send('Emulation.setGeolocationOverride', {
+        latitude: parseFloat(this.latitude),
+        longitude: parseFloat(this.longitude),
+        accuracy: 100
+      })
+    }
+
+    console.log(this.latitude, this.longitude)
 
     await page.goto(`https://www.google.com/search?q=funko+${search}`, { waitUntil: 'domcontentloaded' })
     return page
