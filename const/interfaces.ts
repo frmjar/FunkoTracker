@@ -17,3 +17,8 @@ export interface FunkoResponseProps {
 export interface FunkoResponseErrorProps {
     error: string
 }
+
+export interface GeolocationProps {
+    latitude?: number
+    longitude?: number
+}   

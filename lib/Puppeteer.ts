@@ -1,12 +1,18 @@
 import { FunkoProps } from 'const/interfaces'
-import puppeteer, { Browser, Page } from 'puppeteer-core'
+import puppeteer, { Browser, BrowserContext, Page } from 'puppeteer-core'
 import chromium from '@sparticuz/chromium'
 
 export default class Puppeteer {
   private browser: Browser | null
+  private context: BrowserContext | null
+  private latitude?: string
+  private longitude?: string
 
-  constructor() {
+  constructor(latitude?: string, longitude?: string) {
     this.browser = null
+    this.context = null
+    this.latitude = latitude
+    this.longitude = longitude
   }
 
   async init(): Promise<void> {
@@ -16,6 +22,10 @@ export default class Puppeteer {
       executablePath: await chromium.executablePath(),
       headless: chromium.headless
     })
+
+    //this.browser = await puppeteer.launch({ headless: true, timeout: 60000 })
+    this.context = this.browser.defaultBrowserContext()
+    await this.context.overridePermissions('https://www.google.com', ['geolocation'])
   }
 
   async close(): Promise<void> {
@@ -30,6 +40,11 @@ export default class Puppeteer {
       throw new Error('Browser not initialized')
 
     const page = await this.browser.newPage()
+
+    if (this.latitude && this.longitude) {
+      await page.setGeolocation({ latitude: parseFloat(this.latitude), longitude: parseFloat(this.longitude) })
+    }
+
     await page.goto(`https://www.google.com/search?q=funko+${search}`, { waitUntil: 'domcontentloaded' })
     return page
   }
