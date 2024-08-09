@@ -15,12 +15,14 @@ export default function HalfRating({ rating = 0, review }: HalfRatingProps) {
     rating = parseFloat(rating.replaceAll(',', '.'))
   }
 
+  const ratingNumber: number = rating as number
+
   return (
     <div className={clsx('rating rating-sm rating-half')}>
       {new Array(STAR_COUNT).fill(0).map((_, index) => {
-        const checkedIdx = Math.floor(rating)
-        const isHalf = rating - checkedIdx >= 0.4 && rating - checkedIdx < 0.71
-        const isNearNext = rating - checkedIdx >= 0.71
+        const checkedIdx = Math.floor(ratingNumber)
+        const isHalf = ratingNumber - checkedIdx >= 0.4 && ratingNumber - checkedIdx < 0.71
+        const isNearNext = ratingNumber - checkedIdx >= 0.71
 
         return (
           <Fragment key={index}>

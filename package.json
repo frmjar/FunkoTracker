@@ -6,11 +6,9 @@
     "node": ">=18.0.0"
   },
   "scripts": {
-    "build": " next build",
+    "build": "next build",
     "dev": "next dev",
-    "setup": "NODE_OPTIONS='--experimental-json-modules' node ./scripts/setup.mjs",
-    "start": "next start",
-    "vercel-build": "export DATABASE_URL=$(node ./scripts/env.mjs) && yarn run setup && yarn run build"
+    "start": "next start"
   },
   "dependencies": {
     "@faker-js/faker": "^7.6.0",
