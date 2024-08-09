@@ -1,3 +1,5 @@
+'use client'
+
 import { FunkoProps } from 'const/interfaces'
 import puppeteer, { Browser, BrowserContext, Page } from 'puppeteer-core'
 import chromium from '@sparticuz/chromium'
