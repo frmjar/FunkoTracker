@@ -14,7 +14,6 @@ const organiceFunkos = (search: string, funkosList: FunkoProps[], funkosValues: 
   })
 }
 
-
 export default async function handler(req: NextApiRequest, res: NextApiResponse<FunkoResponseProps | FunkoResponseErrorProps>): Promise<void> {
   const browser = new Puppeteer()
   await browser.init()

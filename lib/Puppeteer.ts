@@ -1,5 +1,6 @@
 import { FunkoProps } from 'const/interfaces'
-import puppeteer, { Browser, Page } from 'puppeteer'
+import puppeteer, { Browser, Page } from 'puppeteer-core'
+import chromium from '@sparticuz/chromium'
 
 export default class Puppeteer {
   private browser: Browser | null
@@ -9,7 +10,12 @@ export default class Puppeteer {
   }
 
   async init(): Promise<void> {
-    this.browser = await puppeteer.launch({ headless: true, timeout: 60000 })
+    this.browser = await puppeteer.launch({
+      args: chromium.args,
+      defaultViewport: chromium.defaultViewport,
+      executablePath: await chromium.executablePath(),
+      headless: chromium.headless
+    })
   }
 
   async close(): Promise<void> {
