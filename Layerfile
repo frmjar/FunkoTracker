@@ -1,0 +1,19 @@
+# .layerfile
+# Usa una imagen base de Webapp.io con soporte Docker y Node.js
+FROM webapp.io/node:21
+# Instala dependencias necesarias del sistema operativo
+RUN apt-get update && apt-get install -y curl
+
+# Instala dependencias del proyecto
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+
+# Copia todo el código fuente al contenedor
+COPY . .
+
+# Ejecuta la compilación de Next.js
+RUN npm run build
+
+RUN BACKGROUND npm run start 80
+EXPOSE WEBSITE http://localhost:80
