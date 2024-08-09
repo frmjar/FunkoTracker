@@ -46,7 +46,7 @@ export default class Puppeteer {
     if (!this.browser) throw new Error('Browser not initialized')
 
     const page = await this.browser.newPage()
-    await page.goto(`https://www.google.com/search?q=funko+${search}`, { waitUntil: 'domcontentloaded' })
+    await page.goto(`https://www.google.com/search?q=funko+${search}&gl='es'`, { waitUntil: 'domcontentloaded' })
     return page
   }
 
