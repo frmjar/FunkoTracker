@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { FunkoResponseProps, GeolocationProps } from 'const/interfaces'
+import { FunkoResponseProps } from 'const/interfaces'
 
 export async function fetchFunkos(search: string): Promise<{ data?: FunkoResponseProps, error?: any }> {
   try {
