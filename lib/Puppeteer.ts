@@ -28,6 +28,7 @@ export default class Puppeteer {
 
       this.context = this.browser.defaultBrowserContext()
       await this.context.overridePermissions('https://www.google.com', ['geolocation'])
+      await this.context.overridePermissions('https://www.google.com/search', ['geolocation'])
     } catch (error) {
       console.error('Failed to initialize Puppeteer:', error)
       throw error
@@ -80,8 +81,6 @@ export default class Puppeteer {
         accuracy: 100
       })
     }
-
-    console.log(this.latitude, this.longitude)
 
     await page.goto(`https://www.google.com/search?q=funko+${search}`, { waitUntil: 'domcontentloaded' })
     return page
