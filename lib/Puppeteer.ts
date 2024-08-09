@@ -45,6 +45,26 @@ export default class Puppeteer {
       await page.setGeolocation({ latitude: parseFloat(this.latitude), longitude: parseFloat(this.longitude) })
     }
 
+    await page.setExtraHTTPHeaders({
+      'Accept-Language': 'es-ES,es;q=0.9',
+    })
+
+    await page.evaluateOnNewDocument(() => {
+      const timeZone = 'Europe/Madrid'
+
+      Object.defineProperty(Intl, 'DateTimeFormat', {
+        value: function() {
+          return new Intl.DateTimeFormat(timeZone)
+        }
+      })
+
+      Object.defineProperty(navigator, 'language', { get: () => 'es-ES' })
+      Object.defineProperty(navigator, 'languages', { get: () => ['es-ES', 'es'] })
+
+    })
+
+    await page.emulateTimezone('Europe/Madrid')
+
     await page.goto(`https://www.google.com/search?q=funko+${search}`, { waitUntil: 'domcontentloaded' })
     return page
   }
