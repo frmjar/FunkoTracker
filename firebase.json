@@ -22,6 +22,14 @@
       {
         "source": "/pages/api/**",
         "function": "nextjs"
+      },
+      {
+        "source": "/api/**",
+        "function": "nextjs"
+      },
+      {
+        "source": "/api/*",
+        "function": "nextjs"
       }
     ],
     "ignore": [
