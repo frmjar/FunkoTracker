@@ -25,7 +25,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   try {
     if (search === undefined || search.length < 3 || search === '') throw new Error('Search is required')
 
-    await Promise.all(Array(5).fill(undefined).map(async (): Promise<void> => {
+    await Promise.all(Array(3).fill(undefined).map(async (): Promise<void> => {
       const page = await browser.newPage(search as string)
 
       const funkoLists = await Promise.all([
