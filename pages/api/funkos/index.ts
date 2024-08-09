@@ -15,8 +15,8 @@ const organiceFunkos = (search: string, funkosList: FunkoProps[], funkosValues: 
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<FunkoResponseProps | FunkoResponseErrorProps>): Promise<void> {
-  const { search, latitude, longitude } = req.query
-  const browser = new Puppeteer(latitude as string | undefined, longitude as string | undefined)
+  const { search } = req.query
+  const browser = new Puppeteer()
   await browser.init()
 
   const funkosValues = new Map<string, FunkoProps>()

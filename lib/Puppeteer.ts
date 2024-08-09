@@ -15,22 +15,16 @@ export default class Puppeteer {
     this.browser = null
     this.context = null
     this.client = null
-    this.latitude = latitude
-    this.longitude = longitude
   }
 
   async init(): Promise<void> {
     try {
       this.browser = await puppeteer.launch({
-        args: [...chromium.args, '--lang=es-ES,es'],
+        args: chromium.args,
         defaultViewport: chromium.defaultViewport,
         executablePath: await chromium.executablePath(),
         headless: chromium.headless,
       })
-
-      this.context = this.browser.defaultBrowserContext()
-      await this.context.overridePermissions('https://www.google.com', ['geolocation'])
-      await this.context.overridePermissions('https://www.google.com/search', ['geolocation'])
     } catch (error) {
       console.error('Failed to initialize Puppeteer:', error)
       throw error
@@ -52,38 +46,6 @@ export default class Puppeteer {
     if (!this.browser) throw new Error('Browser not initialized')
 
     const page = await this.browser.newPage()
-
-    if (this.latitude && this.longitude) {
-      await page.setGeolocation({ latitude: parseFloat(this.latitude), longitude: parseFloat(this.longitude) })
-    }
-
-    await page.setExtraHTTPHeaders({
-      'Accept-Language': 'es-ES,es;q=0.9',
-    })
-
-    await page.evaluateOnNewDocument(() => {
-      const timeZone = 'Europe/Madrid'
-
-      // Simular zona horaria
-      Object.defineProperty(Intl.DateTimeFormat.prototype, 'resolvedOptions', {
-        value: () => ({ timeZone }),
-      })
-
-      // Simular configuración del navegador
-      Object.defineProperty(navigator, 'language', { get: () => 'es-ES' })
-      Object.defineProperty(navigator, 'languages', { get: () => ['es-ES', 'es'] })
-    })
-
-    this.client = await page.target().createCDPSession()
-
-    if (this.latitude && this.longitude) {
-      await this.client.send('Emulation.setGeolocationOverride', {
-        latitude: parseFloat(this.latitude),
-        longitude: parseFloat(this.longitude),
-        accuracy: 100
-      })
-    }
-
     await page.goto(`https://www.google.com/search?q=funko+${search}`, { waitUntil: 'domcontentloaded' })
     return page
   }
