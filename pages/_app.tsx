@@ -1,31 +1,35 @@
-import "../styles/globals.css";
-import type { AppProps } from "next/app";
-import { RecoilRoot, useRecoilSnapshot } from "recoil";
-import { useEffect } from "react";
-import { SnackbarProvider } from "notistack";
+import { Analytics } from "@vercel/analytics/react"
+import { SpeedInsights } from "@vercel/speed-insights/next"
+import type { AppProps } from "next/app"
+import { SnackbarProvider } from "notistack"
+import { useEffect } from "react"
+import { RecoilRoot, useRecoilSnapshot } from "recoil"
+import "../styles/globals.css"
 
 function DebugObserver(): any {
-  const snapshot = useRecoilSnapshot();
+  const snapshot = useRecoilSnapshot()
   useEffect(() => {
-    if (process.env.NODE_ENV !== "development") return;
-    console.debug("The following atoms were modified:");
+    if (process.env.NODE_ENV !== "development") return
+    console.debug("The following atoms were modified:")
     for (const node of snapshot.getNodes_UNSTABLE({ isModified: true })) {
-      console.debug(node.key, snapshot.getLoadable(node));
+      console.debug(node.key, snapshot.getLoadable(node))
     }
-  }, [snapshot]);
+  }, [snapshot])
 
-  return null;
+  return null
 }
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <RecoilRoot>
+      <SpeedInsights />
+      <Analytics />
       <DebugObserver />
       <SnackbarProvider maxSnack={3} autoHideDuration={3000}>
         <Component {...pageProps} />
       </SnackbarProvider>
     </RecoilRoot>
-  );
+  )
 }
 
-export default MyApp;
+export default MyApp
