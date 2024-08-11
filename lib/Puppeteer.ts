@@ -17,22 +17,6 @@ export default class Puppeteer {
         headless: chromium.headless,
       })
 
-      process.on('exit', async () => {
-        if (Puppeteer.browser) await Puppeteer.browser.close()
-      })
-      process.on('SIGINT', async () => {
-        if (Puppeteer.browser) await Puppeteer.browser.close()
-        process.exit(0)
-      })
-      process.on('SIGTERM', async () => {
-        if (Puppeteer.browser) await Puppeteer.browser.close()
-        process.exit(0)
-      })
-      process.on('SIGEPERM', async () => {
-        if (Puppeteer.browser) await Puppeteer.browser.close()
-        process.exit(0)
-      })
-
       console.log('Navegador inicializado')
     } catch (error) {
       console.error('Failed to initialize Puppeteer:', error)
