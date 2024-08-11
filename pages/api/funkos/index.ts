@@ -1,5 +1,5 @@
 import { FunkoProps, FunkoResponseErrorProps, FunkoResponseProps } from 'const/interfaces'
-import Playwright from 'lib/Playwright'
+import Puppeteer from 'lib/Puppeteer'
 import { NextApiRequest, NextApiResponse } from 'next'
 
 const organiceFunkos = (search: string, funkosList: FunkoProps[], funkosValues: Map<string, FunkoProps>, funkosDescartados: Map<string, FunkoProps>): void => {
@@ -16,7 +16,7 @@ const organiceFunkos = (search: string, funkosList: FunkoProps[], funkosValues: 
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<FunkoResponseProps | FunkoResponseErrorProps>): Promise<void> {
   const { search } = req.query
-  const browser = new Playwright()
+  const browser = new Puppeteer()
   await browser.init()
 
   const funkosValues = new Map<string, FunkoProps>()
