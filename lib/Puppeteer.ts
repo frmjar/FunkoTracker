@@ -6,6 +6,7 @@ export default class Puppeteer {
   private static browser: Browser | null = null;
 
   static async init(): Promise<void> {
+    console.log(Puppeteer.browser)
     if (Puppeteer.browser) return
 
     try {
