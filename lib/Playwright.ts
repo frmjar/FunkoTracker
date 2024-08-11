@@ -1,22 +1,16 @@
 import { FunkoProps } from 'const/interfaces'
-import puppeteer, { Browser, BrowserContext, Page } from 'puppeteer-core'
-import chromium from '@sparticuz/chromium'
+import { Browser, chromium, Page } from 'playwright'
 
-export default class Puppeteer {
+export default class Playwright {
   private browser: Browser | null
 
-  constructor(latitude?: string, longitude?: string) {
+  constructor() {
     this.browser = null
   }
 
   async init(): Promise<void> {
     try {
-      this.browser = await puppeteer.launch({
-        args: chromium.args,
-        defaultViewport: chromium.defaultViewport,
-        executablePath: await chromium.executablePath(),
-        headless: chromium.headless,
-      })
+      this.browser = await chromium.launch()
     } catch (error) {
       console.error('Failed to initialize Puppeteer:', error)
       throw error
