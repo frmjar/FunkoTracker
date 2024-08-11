@@ -30,7 +30,7 @@ export default class Puppeteer {
 
     try {
       await Puppeteer.browser.close()
-      Puppeteer.browser = null // Limpia la referencia
+      Puppeteer.browser = null
       console.log('Navegador cerrado')
     } catch (error) {
       console.error('Failed to close browser:', error)

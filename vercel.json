@@ -1,7 +1,8 @@
 {
     "functions": {
         "pages/api/**/*": {
-            "maxDuration": 40
+            "maxDuration": 40,
+            "memory": 3009
         }
     }
 }
