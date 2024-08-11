@@ -1,20 +1,12 @@
-'use client'
-
 import { FunkoProps } from 'const/interfaces'
 import puppeteer, { Browser, BrowserContext, Page } from 'puppeteer-core'
 import chromium from '@sparticuz/chromium'
 
 export default class Puppeteer {
   private browser: Browser | null
-  private context: BrowserContext | null
-  private client: any
-  private latitude?: string
-  private longitude?: string
 
   constructor(latitude?: string, longitude?: string) {
     this.browser = null
-    this.context = null
-    this.client = null
   }
 
   async init(): Promise<void> {
