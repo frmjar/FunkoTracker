@@ -29,7 +29,7 @@ export default function Header(props: HeaderProps) {
           )}
         </div>
         <div className='navbar-center w-full md:w-2/3 lg:1/3'>
-          <form className='flex items-stretch' onSubmit={(e) => handleSubmit(e)}>
+          <form className='flex items-stretch m-auto md:m-0' onSubmit={(e) => handleSubmit(e)}>
             <input type="text" name="funkoSearch" placeholder="Search funko" className="input input-bordered w-full max-w-lg focus:border-none" />
             <button className="btn btn-primary ml-2">Search</button>
           </form>
