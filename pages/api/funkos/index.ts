@@ -16,9 +16,8 @@ const organiceFunkos = (search: string, funkosList: FunkoProps[], funkosValues: 
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<FunkoResponseProps | FunkoResponseErrorProps>): Promise<void> {
   const { search } = req.query
-  const browser = new Puppeteer()
-  await browser.init()
 
+  await Puppeteer.init()
   const funkosValues = new Map<string, FunkoProps>()
   const funkosDescartados = new Map<string, FunkoProps>()
 
@@ -26,23 +25,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     if (search === undefined || search.length < 3 || search === '') throw new Error('Search is required')
 
     await Promise.all(Array(3).fill(undefined).map(async (): Promise<void> => {
-      const page = await browser.newPage(search as string)
+      const page = await Puppeteer.newPage(search as string)
 
       const funkoLists = await Promise.all([
-        browser.evaluatePatrocinadosSuperior(page),
-        browser.evaluatePatrocinadosLateral(page),
-        browser.evaluatePrincipal(page)
+        Puppeteer.evaluatePatrocinadosSuperior(page),
+        Puppeteer.evaluatePatrocinadosLateral(page),
+        Puppeteer.evaluatePrincipal(page)
       ])
 
-      await browser.closePage(page)
+      await Puppeteer.closePage(page)
 
       funkoLists.forEach(funkoList => organiceFunkos(search as string, funkoList, funkosValues, funkosDescartados))
     }))
   } catch (error) {
     console.error('Error en la ejecución principal:', error)
     res.status(500).json({ error: 'Error en la ejecución principal' })
-  } finally {
-    await browser.close()
   }
 
   res.status(200).json({ values: Array.from(funkosValues.values()), discarted: Array.from(funkosDescartados.values()) })

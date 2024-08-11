@@ -1,48 +1,67 @@
-import { FunkoProps } from 'const/interfaces'
-import puppeteer, { Browser, BrowserContext, Page } from 'puppeteer-core'
+import puppeteer, { Browser, Page } from 'puppeteer-core'
 import chromium from '@sparticuz/chromium'
+import { FunkoProps } from 'const/interfaces'
 
 export default class Puppeteer {
-  private browser: Browser | null
+  private static browser: Browser | null = null;
 
-  constructor(latitude?: string, longitude?: string) {
-    this.browser = null
-  }
+  static async init(): Promise<void> {
+    if (Puppeteer.browser) return
 
-  async init(): Promise<void> {
     try {
-      this.browser = await puppeteer.launch({
+      Puppeteer.browser = await puppeteer.launch({
         args: chromium.args,
         defaultViewport: chromium.defaultViewport,
         executablePath: await chromium.executablePath(),
         headless: chromium.headless,
       })
+
+      process.on('exit', async () => {
+        if (Puppeteer.browser) await Puppeteer.browser.close()
+      })
+      process.on('SIGINT', async () => {
+        if (Puppeteer.browser) await Puppeteer.browser.close()
+        process.exit(0)
+      })
+      process.on('SIGTERM', async () => {
+        if (Puppeteer.browser) await Puppeteer.browser.close()
+        process.exit(0)
+      })
+      process.on('SIGEPERM', async () => {
+        if (Puppeteer.browser) await Puppeteer.browser.close()
+        process.exit(0)
+      })
+
+      console.log('Navegador inicializado')
     } catch (error) {
       console.error('Failed to initialize Puppeteer:', error)
       throw error
     }
+
   }
 
-  async close(): Promise<void> {
-    if (!this.browser) throw new Error('Browser not initialized')
+  static async close(): Promise<void> {
+    if (!Puppeteer.browser) throw new Error('Browser not initialized')
 
     try {
-      await this.browser.close()
+      await Puppeteer.browser.close()
+      Puppeteer.browser = null // Limpia la referencia
+      console.log('Navegador cerrado')
     } catch (error) {
       console.error('Failed to close browser:', error)
       throw error
     }
   }
 
-  async newPage(search: string): Promise<Page> {
-    if (!this.browser) throw new Error('Browser not initialized')
+  static async newPage(search: string): Promise<Page> {
+    if (!Puppeteer.browser) throw new Error('Browser not initialized')
 
-    const page = await this.browser.newPage()
+    const page = await Puppeteer.browser.newPage()
     await page.goto(`https://www.google.com/search?q=funko+${search}+-site:.fr&gl=es&lr=lang_es`, { waitUntil: 'domcontentloaded' })
     return page
   }
 
-  async evaluatePatrocinadosSuperior(page: Page): Promise<FunkoProps[]> {
+  static async evaluatePatrocinadosSuperior(page: Page): Promise<FunkoProps[]> {
     try {
       return await page.evaluate((): FunkoProps[] => {
         const funkos: FunkoProps[] = []
@@ -68,7 +87,7 @@ export default class Puppeteer {
     }
   }
 
-  async evaluatePatrocinadosLateral(page: Page): Promise<FunkoProps[]> {
+  static async evaluatePatrocinadosLateral(page: Page): Promise<FunkoProps[]> {
     try {
       return await page.evaluate((): FunkoProps[] => {
         const funkos: FunkoProps[] = []
@@ -95,7 +114,7 @@ export default class Puppeteer {
     }
   }
 
-  async evaluatePrincipal(page: Page): Promise<FunkoProps[]> {
+  static async evaluatePrincipal(page: Page): Promise<FunkoProps[]> {
     try {
       return await page.evaluate((): FunkoProps[] => {
         const funkos: FunkoProps[] = []
@@ -120,7 +139,7 @@ export default class Puppeteer {
     }
   }
 
-  async closePage(page: Page): Promise<void> {
+  static async closePage(page: Page): Promise<void> {
     try {
       await page.close()
     } catch (error) {
