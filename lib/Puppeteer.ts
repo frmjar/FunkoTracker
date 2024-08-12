@@ -1,21 +1,46 @@
-import puppeteer, { Browser, Page } from 'puppeteer-core'
-import chromium from '@sparticuz/chromium'
 import { FunkoProps } from 'const/interfaces'
 
+let puppeteer: any
+let chromium: any
+let Browser: any
+let Page: any
+
+async function loadDependencies() {
+  if (process.env.NODE_ENV === "development") {
+    puppeteer = await import('puppeteer')
+    Browser = (await import('puppeteer')).Browser
+    Page = (await import('puppeteer')).Page
+  } else {
+    puppeteer = await import('puppeteer-core')
+    Browser = (await import('puppeteer-core')).Browser
+    Page = (await import('puppeteer-core')).Page
+    chromium = await import('@sparticuz/chromium')
+  }
+}
+
 export default class Puppeteer {
-  private static browser: Browser | null = null;
+  private static browser: typeof Browser | null = null;
 
   static async init(): Promise<void> {
-    console.log(Puppeteer.browser)
     if (Puppeteer.browser) return
 
+    await loadDependencies()
+
     try {
-      Puppeteer.browser = await puppeteer.launch({
-        args: chromium.args,
-        defaultViewport: chromium.defaultViewport,
-        executablePath: await chromium.executablePath(),
-        headless: chromium.headless,
-      })
+      if (process.env.NODE_ENV === "development") {
+        Puppeteer.browser = await puppeteer.launch({
+          args: ['--no-sandbox', '--disable-setuid-sandbox'],
+          defaultViewport: null
+        })
+      }
+      else {
+        Puppeteer.browser = await puppeteer.launch({
+          args: chromium.args,
+          defaultViewport: chromium.defaultViewport,
+          executablePath: await chromium.executablePath(),
+          headless: chromium.headless,
+        })
+      }
 
       console.log('Navegador inicializado')
     } catch (error) {
@@ -38,7 +63,7 @@ export default class Puppeteer {
     }
   }
 
-  static async newPage(search: string): Promise<Page> {
+  static async newPage(search: string): Promise<typeof Page> {
     if (!Puppeteer.browser) throw new Error('Browser not initialized')
 
     const page = await Puppeteer.browser.newPage()
@@ -46,7 +71,7 @@ export default class Puppeteer {
     return page
   }
 
-  static async evaluatePatrocinadosSuperior(page: Page): Promise<FunkoProps[]> {
+  static async evaluatePatrocinadosSuperior(page: typeof Page): Promise<FunkoProps[]> {
     try {
       return await page.evaluate((): FunkoProps[] => {
         const funkos: FunkoProps[] = []
@@ -72,7 +97,7 @@ export default class Puppeteer {
     }
   }
 
-  static async evaluatePatrocinadosLateral(page: Page): Promise<FunkoProps[]> {
+  static async evaluatePatrocinadosLateral(page: typeof Page): Promise<FunkoProps[]> {
     try {
       return await page.evaluate((): FunkoProps[] => {
         const funkos: FunkoProps[] = []
@@ -99,18 +124,18 @@ export default class Puppeteer {
     }
   }
 
-  static async evaluatePrincipal(page: Page): Promise<FunkoProps[]> {
+  static async evaluatePrincipal(page: typeof Page): Promise<FunkoProps[]> {
     try {
       return await page.evaluate((): FunkoProps[] => {
         const funkos: FunkoProps[] = []
 
         document.querySelectorAll('div[data-async-context] > div').forEach(funko => {
-          const web = funko.querySelectorAll('div.notranslate span') ? (funko.querySelectorAll('div.notranslate span')[1] as HTMLElement)?.innerText : undefined
-          let image = funko.querySelectorAll('a img') ? funko.querySelectorAll('a img')[1]?.getAttribute('src') ?? undefined : undefined
+          const web = (funko.querySelector('div.notranslate span:nth-child(2)') as HTMLElement)?.innerText
+          let image = funko.querySelector('a img:nth-child(2)')?.getAttribute('src') ?? undefined
           image = image === 'data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==' ? undefined : image
 
           const link = funko.querySelector('a')?.getAttribute('href') ?? undefined
-          const name = funko.querySelector('h3')?.innerText ?? ''
+          const name = funko.querySelector('h3')?.innerText || ''
           const price = (funko.querySelector('div.ChPIuf > span') as HTMLElement)?.innerText
 
           funkos.push({ web, image, link, name, price })
@@ -124,7 +149,8 @@ export default class Puppeteer {
     }
   }
 
-  static async closePage(page: Page): Promise<void> {
+
+  static async closePage(page: typeof Page): Promise<void> {
     try {
       await page.close()
     } catch (error) {
