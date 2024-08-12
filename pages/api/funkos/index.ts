@@ -42,5 +42,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     res.status(500).json({ error: 'Error en la ejecución principal' })
   }
 
-  res.status(200).json({ values: Array.from(funkosValues.values()), discarted: Array.from(funkosDescartados.values()) })
+  // order by price
+  const values = Array.from(funkosValues.values()).sort((a, b) => {
+    const priceA = a.price?.replace(/€|,|\./g, '') ?? '0'
+    const priceB = b.price?.replace(/€|,|\./g, '') ?? '0'
+
+    return parseInt(priceA) - parseInt(priceB)
+  })
+
+  res.status(200).json({ values, discarted: Array.from(funkosDescartados.values()) })
 }
