@@ -1,5 +1,3 @@
-import { Analytics } from "@vercel/analytics/react"
-import { SpeedInsights } from "@vercel/speed-insights/next"
 import type { AppProps } from "next/app"
 import { SnackbarProvider } from "notistack"
 import { useEffect } from "react"
@@ -22,8 +20,6 @@ function DebugObserver(): any {
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <RecoilRoot>
-      <SpeedInsights />
-      <Analytics />
       <DebugObserver />
       <SnackbarProvider maxSnack={3} autoHideDuration={3000}>
         <Component {...pageProps} />
