@@ -25,6 +25,7 @@ jobs:
         run: npm run build
 
   deploy-server:
+    needs: check-correct-build
     runs-on: ubuntu-latest
 
     steps:
