@@ -9,8 +9,8 @@ const Home: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Funko traker</title>
-        <meta name='description' content='Funko traker Home Page' />
+        <title>Funko tracker</title>
+        <meta name='description' content='Funko tracker Home Page' />
         <link rel='icon' href='/favicon.ico' />
       </Head>
 

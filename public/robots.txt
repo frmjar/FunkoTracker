@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://funkotracker.com
+
+# Sitemaps
+Sitemap: https://funkotracker.com/sitemap.xml
