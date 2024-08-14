@@ -6,7 +6,7 @@ on:
       - main  
 
 jobs:
-  build-and-deploy:
+  check-correct-build:
     runs-on: ubuntu-latest
 
     steps:
@@ -24,14 +24,22 @@ jobs:
       - name: Build Next.js app
         run: npm run build
 
+  deploy-server:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.5.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
       - name: Deploy to server
         env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           SERVER_USER: ${{ secrets.SERVER_USER }}
           SERVER_IP: ${{ secrets.SERVER_IP }}
           DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
         run: |
-          ssh -o StrictHostKeyChecking=no -i "$SSH_PRIVATE_KEY" $SERVER_USER@$SERVER_IP << 'EOF'
+          ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP << 'EOF'
             cd $DEPLOY_PATH
             git pull origin main
             npm install
