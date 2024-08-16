@@ -6,7 +6,6 @@ export default class Puppeteer {
   private static browser: Browser | null = null;
 
   static async init(): Promise<void> {
-    console.log(Puppeteer.browser)
     if (Puppeteer.browser) return
 
     try {
@@ -39,6 +38,8 @@ export default class Puppeteer {
 
   static async newPage(search: string): Promise<Page> {
     if (!Puppeteer.browser) throw new Error('Browser not initialized')
+
+    console.info(`Buscando Funko de ${search}...`)
 
     const page = await Puppeteer.browser.newPage()
     await page.goto(`https://www.google.com/search?q=funko+${search}+-site:.fr&gl=es&lr=lang_es`, { waitUntil: 'domcontentloaded' })

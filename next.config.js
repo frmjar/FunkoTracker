@@ -1,4 +1,9 @@
 // next.config.js
 module.exports = {
-  images: { }
+  images: { },
+  logging: {
+    fetches: {
+      fullUrl: false,
+    },
+  }
 };
