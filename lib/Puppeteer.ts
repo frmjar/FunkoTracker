@@ -54,6 +54,7 @@ export default class Puppeteer {
         document.querySelectorAll('.pla-unit').forEach(funko => {
           const web = funko.getAttribute('data-dtld') ?? undefined
           const image = funko.querySelector('.pla-unit-container .pla-unit-img-container img')?.getAttribute('src') ?? undefined
+          const imageAlt = funko.querySelector('.pla-unit-container .pla-unit-img-container img')?.getAttribute('alt') ?? undefined
           const link = funko.querySelector('.pla-unit-container a.pla-unit-img-container-link')?.getAttribute('href') ?? undefined
           const name = (funko.querySelector('.pla-unit-container .pla-unit-title span') as HTMLElement)?.innerText
           const price = funko.querySelector('.pla-unit-container .pla-unit-title')?.nextElementSibling?.querySelector('span')?.innerText
@@ -61,7 +62,7 @@ export default class Puppeteer {
           const stars = funko.querySelector('.pla-unit-container .pla-extensions-container > div')?.nextElementSibling?.querySelector('span > span')?.getAttribute('aria-label')?.replace(/,\s*$/, '')
           const reviews = (funko.querySelector('.pla-unit-container .pla-extensions-container > div')?.nextElementSibling?.querySelector('span')?.nextElementSibling as HTMLElement)?.innerText?.replace(/\(|\)/g, '')
 
-          funkos.push({ web, image, link, name, price, shipping, stars, reviews })
+          funkos.push({ web, image, imageAlt, link, name, price, shipping, stars, reviews, debug: 'Patrocinados Superior' })
         })
 
         return funkos
@@ -88,7 +89,7 @@ export default class Puppeteer {
           const price = textos[1]
           const shipping = indexNameNormal ? textos[4] : undefined
 
-          funkos.push({ web, link, name, price, shipping })
+          funkos.push({ web, link, name, price, shipping, debug: 'Patrocinados Lateral' })
         })
 
         return funkos
@@ -111,9 +112,12 @@ export default class Puppeteer {
 
           const link = funko.querySelector('a')?.getAttribute('href') ?? undefined
           const name = funko.querySelector('h3')?.innerText ?? ''
-          const price = (funko.querySelector('div.ChPIuf > span') as HTMLElement)?.innerText
+          const priceAndStock = funko.querySelectorAll('div.ChPIuf span')
 
-          funkos.push({ web, image, link, name, price })
+          const price = (priceAndStock[0] as HTMLElement)?.innerText
+          const stock = (priceAndStock[3] as HTMLElement)?.innerText
+
+          funkos.push({ web, image, link, name, price, stock, debug: 'Principal' })
         })
 
         return funkos

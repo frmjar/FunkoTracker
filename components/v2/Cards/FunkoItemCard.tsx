@@ -1,4 +1,3 @@
-import Image from 'next/image'
 import HalfRating from 'components/v2/Rating/HalfRating'
 import { IMG_DEFAULT_URL } from 'const'
 import { FunkoProps } from 'const/interfaces'
@@ -30,7 +29,10 @@ export function FunkoItemCard({ funko }: { funko: FunkoProps }) {
         <HalfRating rating={rating} review={reviews} />
 
         <div className='card-actions justify-end font-bold text-xl w-100 mt-auto'>
-          {shipping && <span className='font-normal text-sm mr-4 leading-7'>{shipping}</span>}  {price}
+          {stock && <span className='font-normal text-sm mr-4 leading-7'>{stock}</span>}
+          {process.env.NODE_ENV === 'development' && debug && <span className='font-normal text-sm mr-4 leading-7'>{debug}</span>}
+          {shipping && <span className='font-normal text-sm mr-4 leading-7'>{shipping}</span>}
+          {price} {currency}
         </div>
       </div>
     </div>
