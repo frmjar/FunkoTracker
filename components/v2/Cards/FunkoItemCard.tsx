@@ -2,31 +2,20 @@ import Image from 'next/image'
 import HalfRating from 'components/v2/Rating/HalfRating'
 import { IMG_DEFAULT_URL } from 'const'
 import { FunkoProps } from 'const/interfaces'
+import ImageLoad from './ImageLoad'
 
 export function FunkoItemCard({ funko }: { funko: FunkoProps }) {
 
-  const { name, image, link, web, price, shipping, stars, reviews } = funko || {}
+  const { name, image, imageAlt, link, web, price, currency, shipping, stars, reviews, stock, debug } = funko || {}
   const rating = stars?.match(/\d+,\d+/)?.[0] || 0
 
   return (
     <div className='card card-compact w-96 bg-base-100 shadow-xl'>
       <figure>
-        {
-          image ? (
-            <Image
-              src={`/api/funkos/img?url=${encodeURIComponent(image)}`} alt={name}
-              width={250}
-              height={100}
-              style={{ minWidth: '170px', width: 'auto', height: 'auto' }} unoptimized />
-          ) : (
-            <Image
-              src={`/api/funkos/img?url=${encodeURIComponent(IMG_DEFAULT_URL)}`}
-              alt={name}
-              width={250}
-              height={100}
-              style={{ minWidth: '170px', width: 250, height: 'auto' }} unoptimized />
-          )
-        }
+        <ImageLoad
+          src={image}
+          alt={imageAlt || name}
+          fallbackSrc={IMG_DEFAULT_URL} />
       </figure>
       <div className='card-body'>
 
