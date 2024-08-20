@@ -9,6 +9,7 @@ interface ImageLoadProps {
 
 export default function ImageLoad({ src, alt, fallbackSrc }: ImageLoadProps) {
     const [source, setSource] = useState(src || fallbackSrc)
+    const [error, setError] = useState(false)
 
     return (
         <Image
@@ -17,8 +18,11 @@ export default function ImageLoad({ src, alt, fallbackSrc }: ImageLoadProps) {
             height={200}
             width={170}
             style={{ minWidth: '170px', width: 'auto', height: 200 }}
-            unoptimized
-            onError={() => setSource(fallbackSrc)}
+            unoptimized={error}
+            onError={() => {
+                setSource(fallbackSrc)
+                setError(true)
+            }}
         />
     )
 }
