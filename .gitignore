@@ -1,6 +1,7 @@
 .now
 node_modules/
 *.env*
+mockups/
 
 .vercel
 
