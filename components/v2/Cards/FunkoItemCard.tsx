@@ -1,5 +1,5 @@
 import HalfRating from 'components/v2/Rating/HalfRating'
-import { IMG_DEFAULT_URL } from 'const'
+import { currencies, currenciesMap, IMG_DEFAULT_URL } from 'const'
 import { FunkoProps } from 'const/interfaces'
 import ImageLoad from './ImageLoad'
 
@@ -32,7 +32,7 @@ export function FunkoItemCard({ funko }: { funko: FunkoProps }) {
           {stock && <span className='font-normal text-sm mr-4 leading-7'>{stock}</span>}
           {process.env.NODE_ENV === 'development' && debug && <span className='font-normal text-sm mr-4 leading-7'>{debug}</span>}
           {shipping && <span className='font-normal text-sm mr-4 leading-7'>{shipping}</span>}
-          {price} {currency}
+          {price} {currenciesMap(currency as keyof typeof currencies)}
         </div>
       </div>
     </div>
