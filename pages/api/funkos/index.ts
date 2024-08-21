@@ -74,7 +74,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     if (search === undefined || search.length < 3 || search === '') throw new Error('Search is required')
 
     const results = await searchGoogle(search as string)
-    if (results.length === 0) results.push(...await searchPuppetter(search as string))
+    results.push(...await searchPuppetter(search as string))
 
     funkosList = clearFunkos(search as string, results)
 

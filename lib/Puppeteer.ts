@@ -112,10 +112,18 @@ export default class Puppeteer {
 
           const link = funko.querySelector('a')?.getAttribute('href') ?? undefined
           const name = funko.querySelector('h3')?.innerText ?? ''
-          const priceAndStock = funko.querySelectorAll('div.ChPIuf span')
+          const priceAndStock = (funko.querySelector('div.ChPIuf') as HTMLElement)?.innerText
 
-          const price = (priceAndStock[0] as HTMLElement)?.innerText
-          const stock = (priceAndStock[3] as HTMLElement)?.innerText
+          const valoracionRegex = /((.+):(\s)(\d+)[,.]?\d*)/i
+          const resenasRegex = /([\d.,]+)(\s+)([\wñ]{3,})/i
+          const precioRegex = /((\d+[,.]\d+)(\s+)([\w]{1,3}|[^·\D\W]|[^·]))/i
+          const stockRegex = /[^·]*stock[^·]*/i
+
+          const stars = priceAndStock?.match(valoracionRegex)?.[0].trim()
+          const reviews = priceAndStock?.match(resenasRegex)?.[0].trim()
+          const price = priceAndStock?.match(precioRegex)?.[0].trim()
+          const stock = priceAndStock?.match(stockRegex)?.[0].trim()
+
 
           funkos.push({ web, image, link, name, price, stock, debug: 'Principal' })
         })
