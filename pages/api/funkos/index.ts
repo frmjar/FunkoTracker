@@ -85,10 +85,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
   // order by price
   const values = funkosList.sort((a, b) => {
-    const priceA = a.price?.replace(/€|,|\./g, '') ?? '0'
-    const priceB = b.price?.replace(/€|,|\./g, '') ?? '0'
+    const priceA = Number.parseFloat(a.price?.replace(/€/g, '').replace(/,/g, '.') ?? ' 0')
+    const priceB = Number.parseFloat(b.price?.replace(/€/g, '').replace(/,/g, '.') ?? ' 0')
 
-    return parseInt(priceA) - parseInt(priceB)
+    return priceA - priceB
   })
 
   res.status(200).json({ values })
