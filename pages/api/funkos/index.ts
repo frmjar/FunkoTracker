@@ -27,7 +27,10 @@ const searchGoogle = async (search: string): Promise<FunkoProps[]> => {
 
   if (results === undefined) return []
 
-  const resultsFiltered = results.items.filter(f => f.pagemap.metatags[0]['product:price:amount'] !== undefined)
+  const resultsFiltered = results.items.filter(f => {
+    if (!f.pagemap) return false
+    return f.pagemap.metatags[0]['product:price:amount'] !== undefined
+  })
 
   const values = resultsFiltered.map(f => {
     return {
