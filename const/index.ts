@@ -60,12 +60,28 @@ export const currenciesMap = (currency?: keyof typeof currencies): string => {
     return currencies[currency] || currency
 }
 
+export const formatNumberAsString = (number?: number | string): string | undefined => {
+    if (!number) return undefined
+    return parseFloat(number.toString().replace(',', '.')).toFixed(2).replace('.', ',')
+}
+
+export const extractNumberAndCurrency = (price?: string): RegExpMatchArray | undefined => {
+    if (!price) return undefined
+    return price?.match(/(\d+[,.]?\d*)?\s?(.+)?/i) || undefined
+}
+
+export const extractNumber = (price?: string): number | undefined => {
+    if (!price) return undefined
+    const number = extractNumberAndCurrency(price)?.[1]
+    return number ? parseFloat(number.replace(',', '.')) : undefined
+}
+
 export const formatPrice = (price?: string): string | undefined => {
     if (!price) return undefined
 
-    const priceAndcurrency = price?.match(/(\d+[,.]?\d*)?\s?(.+)?/i)
-    const priceFormatted = priceAndcurrency?.[1] ? parseFloat(priceAndcurrency[1].replace(',', '.')).toFixed(2) : undefined
-    const priceFormatted2 = `${priceFormatted} ${priceAndcurrency?.[2]}`.replace(/undefined/g, '').replace('.', ',')
+    const priceAndcurrency = extractNumberAndCurrency(price)
+    const priceFormatted = formatNumberAsString(priceAndcurrency?.[1])
+    const priceFormatted2 = `${priceFormatted} ${priceAndcurrency?.[2]}`.replace(/undefined/g, '')
 
     return priceFormatted2
 }
