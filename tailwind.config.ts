@@ -15,7 +15,8 @@ const config: Config = {
       },
       boxShadow: {
         'lg-top': '0 -10px 15px -3px rgb(0 0 0 / 0.1), 0 -4px 6px -4px rgb(0 0 0 / 0.1)',
-      },
+        'box': '4px 0 5px -2px rgba(0, 0, 0, 0.2), -4px 0 5px -2px rgba(0, 0, 0, 0.2)'
+      }
     },
   },
   plugins: [
