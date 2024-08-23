@@ -25,13 +25,6 @@ export const AverageFunkoPrice = ({ prices }: { prices: Array<{ number: number, 
         return acc
     }, {} as Record<string, number>)
 
-    const modaCurrency = prices.reduce((acc, price) => {
-        if (!price.currency) return acc
-        if (!acc[price.currency]) acc[price.currency] = 0
-        acc[price.currency]++
-        return acc
-    }, {} as Record<string, number>)
-
     return (
         <div className='flex flex-row md:gap-40 text-center align-middle justify-between md:justify-center mt-0 mb-14'>
             <PriceCard text='Precio mínimo' price={minPriceByCurrency} />

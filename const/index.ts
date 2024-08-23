@@ -72,7 +72,7 @@ export const extractNumberAndCurrency = (price?: string, currency?: string): { n
     if (!values || !values[1]) return undefined
 
     return {
-        number: parseFloat(values[1]),
+        number: parseFloat(values[1].replace(',', '.')),
         currency: currenciesMap(currency as keyof typeof currencies) || values?.[2]
     }
 }
