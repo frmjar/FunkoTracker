@@ -65,7 +65,7 @@ export const formatNumberAsString = (number?: number | string): string | undefin
     return parseFloat(number.toString().replace(',', '.')).toFixed(2).replace('.', ',')
 }
 
-export const extractNumberAndCurrency = (price?: string): { number: number, currency: string } | undefined => {
+export const extractNumberAndCurrency = (price?: string, currency?: string): { number: number, currency: string } | undefined => {
     if (!price) return undefined
     const values = price?.match(/(\d+[,.]?\d*)?\s?(.+)?/i) || undefined
 
@@ -73,7 +73,7 @@ export const extractNumberAndCurrency = (price?: string): { number: number, curr
 
     return {
         number: parseFloat(values[1]),
-        currency: values?.[2]
+        currency: currenciesMap(currency as keyof typeof currencies) || values?.[2]
     }
 }
 

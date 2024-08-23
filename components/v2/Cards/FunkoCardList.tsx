@@ -12,7 +12,7 @@ export default function FunkoList() {
   switch (funkoListLoadable.state) {
     case 'hasValue':
       const prices = funkoListLoadable.contents
-        .data?.values?.map((funko: FunkoProps): { number: number, currency: string } | undefined => extractNumberAndCurrency(funko.price))
+        .data?.values?.map((funko: FunkoProps): { number: number, currency: string } | undefined => extractNumberAndCurrency(funko.price, funko.currency))
         .filter((value): boolean => value !== undefined) as Array<{ number: number, currency: string }>
 
       return (
