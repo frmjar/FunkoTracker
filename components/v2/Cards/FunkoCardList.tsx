@@ -1,4 +1,4 @@
-import { extractNumber } from 'const'
+import { extractNumberAndCurrency } from 'const'
 import { FunkoProps } from 'const/interfaces'
 import { Fragment } from 'react'
 import { useRecoilValueLoadable } from 'recoil'
@@ -12,8 +12,8 @@ export default function FunkoList() {
   switch (funkoListLoadable.state) {
     case 'hasValue':
       const prices = funkoListLoadable.contents
-        .data?.values?.map((funko: FunkoProps): number | undefined => extractNumber(funko.price))
-        .filter((price: number | undefined): boolean => price !== undefined) as number[]
+        .data?.values?.map((funko: FunkoProps): { number: number, currency: string } | undefined => extractNumberAndCurrency(funko.price))
+        .filter((value): boolean => value !== undefined) as Array<{ number: number, currency: string }>
 
       return (
         <Fragment>
