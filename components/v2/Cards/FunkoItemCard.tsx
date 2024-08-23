@@ -6,7 +6,8 @@ import ImageLoad from './ImageLoad'
 export function FunkoItemCard({ funko }: { funko: FunkoProps }) {
 
   const { name, image, imageAlt, link, web, price, currency, shipping, stars, reviews, stock, debug } = funko || {}
-  const rating = stars?.match(/\d+,\d+/)?.[0] || 0
+
+  const rating = stars?.match(/\d+([,.]\d+)?/)?.[0] || 0
 
   return (
     <div className='card card-compact w-96 bg-base-100 shadow-xl'>

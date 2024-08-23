@@ -1,3 +1,4 @@
+import { formatPrice } from 'const'
 import { GoogleAPIDataInterface } from 'const/GoogleAPIInterface'
 import { FunkoProps, FunkoResponseErrorProps, FunkoResponseProps } from 'const/interfaces'
 import { GoogleAPI } from 'lib/GoogleAPI'
@@ -9,7 +10,10 @@ const clearFunkos = (search: string, funkosList: FunkoProps[]): FunkoProps[] => 
 
   funkosList.forEach(f => {
     if (f.web?.toLowerCase().includes('idealo') || f.web?.toLowerCase().includes('globerada')) return
-    if (search.toLowerCase().split(' ').some(s => f.name?.toLowerCase().includes(s.toLowerCase()))) funkosValues.set(f.name, f)
+    if (search.toLowerCase().split(' ').some(s => f.name?.toLowerCase().includes(s.toLowerCase()))) {
+      f.price = formatPrice(f.price)
+      funkosValues.set(f.name, f)
+    }
   })
 
   return Array.from(funkosValues.values())

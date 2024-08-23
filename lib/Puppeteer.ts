@@ -125,7 +125,7 @@ export default class Puppeteer {
           const stock = priceAndStock?.match(stockRegex)?.[0].trim()
 
 
-          funkos.push({ web, image, link, name, price, stock, debug: 'Principal' })
+          funkos.push({ web, image, link, name, price, stock, stars, reviews, debug: 'Principal' })
         })
 
         return funkos

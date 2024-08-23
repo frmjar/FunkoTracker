@@ -59,3 +59,13 @@ export const currenciesMap = (currency?: keyof typeof currencies): string => {
     if (!currency) return ''
     return currencies[currency] || currency
 }
+
+export const formatPrice = (price?: string): string | undefined => {
+    if (!price) return undefined
+
+    const priceAndcurrency = price?.match(/(\d+[,.]?\d*)?\s?(.+)?/i)
+    const priceFormatted = priceAndcurrency?.[1] ? parseFloat(priceAndcurrency[1].replace(',', '.')).toFixed(2) : undefined
+    const priceFormatted2 = `${priceFormatted} ${priceAndcurrency?.[2]}`.replace(/undefined/g, '').replace('.', ',')
+
+    return priceFormatted2
+}
