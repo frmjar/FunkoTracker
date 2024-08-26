@@ -3,6 +3,7 @@ import { GoogleAPIDataInterface } from 'const/GoogleAPIInterface'
 import { FunkoProps, FunkoResponseErrorProps, FunkoResponseProps } from 'const/interfaces'
 import { GoogleAPI } from 'lib/GoogleAPI'
 import Puppeteer from 'lib/Puppeteer'
+import { VintedAPI } from 'lib/VintedAPI'
 import { NextApiRequest, NextApiResponse } from 'next'
 
 const clearFunkos = (search: string, funkosList: FunkoProps[]): FunkoProps[] => {
@@ -53,6 +54,25 @@ const searchGoogle = async (search: string): Promise<FunkoProps[]> => {
   return values
 }
 
+const searchVinted = async (search: string): Promise<FunkoProps[]> => {
+  const results = await VintedAPI.search(search as string)
+
+  return results.map(f => {
+    return {
+      name: f.title,
+      image: f.photo.url,
+      imageAlt: f.title,
+      link: f.url,
+      web: 'Vinted',
+      price: f.price,
+      shipping: f.service_fee,
+      currency: f.currency,
+      stock: f.status,
+      debug: 'Vinted'
+    }
+  })
+}
+
 const searchPuppetter = async (search: string): Promise<FunkoProps[]> => {
   await Puppeteer.init()
 
@@ -77,7 +97,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   try {
     if (search === undefined || search.length < 3 || search === '') throw new Error('Search is required')
 
+
+
     const results = await searchGoogle(search as string)
+    results.push(...await searchVinted(search as string))
     results.push(...await searchPuppetter(search as string))
 
     funkosList = clearFunkos(search as string, results)
