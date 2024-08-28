@@ -36,6 +36,25 @@ export default class Puppeteer {
     }
   }
 
+  static async getCookiesVinted(): Promise<string> {
+    if (!Puppeteer.browser) throw new Error('Browser not initialized')
+
+    try {
+      const page = await Puppeteer.browser.newPage()
+      await page.goto('https://www.vinted.es', { waitUntil: 'domcontentloaded' })
+
+      const cookies = await page?.cookies()
+      const cookie = cookies?.find(c => c.name === '_vinted_fr_session')?.value
+
+      await page?.close()
+
+      return cookie ?? ''
+    } catch (error) {
+      console.error('Failed to get Vinted cookies:', error)
+      throw error
+    }
+  }
+
   static async newPage(search: string): Promise<Page> {
     if (!Puppeteer.browser) throw new Error('Browser not initialized')
 

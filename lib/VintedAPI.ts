@@ -1,18 +1,13 @@
 import axios from 'axios'
 import { VintedItem } from 'const/VintedAPIInterface'
 import UserAgent from 'user-agents'
+import Puppeteer from './Puppeteer'
 
 export class VintedAPI {
 
     static search = async (query: string): Promise<VintedItem[]> => {
-        const coockie = await axios.get(`https://www.vinted.es`).then((res): string => {
-            const sessionCookie = res?.headers?.['set-cookie'] ?? ''
-            const cc = sessionCookie[1].split(`_vinted_fr_session=`)[1].split(';')[0]
-            return cc
-        }).catch((e): null => {
-            console.log(e)
-            return null
-        })
+        await Puppeteer.init()
+        const coockie = await Puppeteer.getCookiesVinted()
 
         const results = axios.get(`https://www.vinted.es/api/v2/catalog/items?search_text=funko+${query}`, {
             headers: {
@@ -23,7 +18,7 @@ export class VintedAPI {
         }).then((res): VintedItem[] => {
             return res.data.items
         }).catch((e): never[] => {
-            console.log(e)
+            console.log(e.message)
             return []
         })
 
