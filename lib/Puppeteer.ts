@@ -1,6 +1,10 @@
 import chromium from '@sparticuz/chromium'
 import { FunkoProps } from 'const/interfaces'
-import puppeteer, { Browser, Page } from 'puppeteer'
+import { Browser, Page } from 'puppeteer'
+import puppeteer from 'puppeteer-extra'
+import StealthPlugin from 'puppeteer-extra-plugin-stealth'
+
+puppeteer.use(StealthPlugin())
 
 export default class Puppeteer {
   private static browser: Browser | null = null;
@@ -41,7 +45,24 @@ export default class Puppeteer {
 
     try {
       const page = await Puppeteer.browser.newPage()
-      await page.goto('https://www.vinted.es', { waitUntil: 'domcontentloaded' })
+      await page.setExtraHTTPHeaders({
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:129.0) Gecko/20100101 Firefox/129.0',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/png,image/svg+xml,*/*;q=0.8',
+        'Accept-Language': 'es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3',
+        'Accept-Encoding': 'gzip, deflate, br, zstd',
+        'Connection': 'keep-alive',
+        'Cookie': 'OptanonConsent=consentId=fd8eb6ae-39d2-4bac-8e02-84e6aa43da4d&datestamp=Wed+Aug+28+2024+12%3A08%3A53+GMT%2B0200+(hora+de+verano+de+Europa+central)&version=202312.1.0&interactionCount=0',
+        'Upgrade-Insecure-Requests': '1',
+        'Sec-Fetch-Dest': 'document',
+        'Sec-Fetch-Mode': 'navigate',
+        'Sec-Fetch-Site': 'none',
+        'Sec-Fetch-User': '?1',
+        'Priority': 'u=0, i',
+        'Pragma': 'no-cache',
+        'Cache-Control': 'no-cache'
+      })
+
+      await page.goto('https://www.vinted.es', { waitUntil: ['domcontentloaded', 'networkidle0'] })
 
       const cookies = await page?.cookies()
       const cookie = cookies?.find(c => c.name === '_vinted_fr_session')?.value
