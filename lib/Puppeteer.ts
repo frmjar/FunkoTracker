@@ -1,5 +1,6 @@
 import chromium from '@sparticuz/chromium'
 import { FunkoProps } from 'const/interfaces'
+import { VintedItem } from 'const/VintedAPIInterface'
 import { Browser, Page } from 'puppeteer'
 import puppeteer from 'puppeteer-extra'
 import StealthPlugin from 'puppeteer-extra-plugin-stealth'
@@ -51,7 +52,6 @@ export default class Puppeteer {
         'Accept-Language': 'es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3',
         'Accept-Encoding': 'gzip, deflate, br, zstd',
         'Connection': 'keep-alive',
-        'Cookie': 'OptanonConsent=consentId=fd8eb6ae-39d2-4bac-8e02-84e6aa43da4d&datestamp=Wed+Aug+28+2024+12%3A08%3A53+GMT%2B0200+(hora+de+verano+de+Europa+central)&version=202312.1.0&interactionCount=0',
         'Upgrade-Insecure-Requests': '1',
         'Sec-Fetch-Dest': 'document',
         'Sec-Fetch-Mode': 'navigate',
@@ -61,6 +61,16 @@ export default class Puppeteer {
         'Pragma': 'no-cache',
         'Cache-Control': 'no-cache'
       })
+
+      await page.setCookie({
+        name: '_vinted_fr_session',
+        value: 'RDFJTnNSSExSamdQaVJBeENCSHVHQ1NkNmcxRkNmVHhVTGxaUUkyY09PbEFLMDgzdFVVUW83dVNvOFYzQk04emlHbHUycXdlMHRSdHhGS1MwSG91OStHeWdkTlZzVE01RzJFTCtzajQxY044eSt6Rk9QTEZtOTVLUCthWkhPUXQ3S0NienJ5d0hqdHZueHZPRlE4S1Nxdmo4NUxxOW9EejYvSGlaQnZicGY0M0VQSHAvYlpsWXFNSDZZT3ZnZlltcDQ4TkhiOU9zeG9ScmRVcERwbEk0cEUzVTBtVUFyRFE3Q1NuOUtSdTI0bXNJamJHUHd1SURGL3RFUWxCcVA4ak1ENWNNYVR6VzVFMjltQWx5cHJXN1hCYkZIODBJUWd3a2ZaZmVqZW04clhkV2tvdTBVVTE0UEVUTUdCeFdtME85RW9yUGk1cG01V21JRmF3TTVyMEJEdXFRTE1uT0pmeit4bCtoMWxSRGRKamJVSXNtTHpkR3R3dFhZU2ZzRTV5TEtkQmR5ZUFITDdlV084MWFhb1paMERJT0QrUEp2TVpYTVVWK1RjTEhyNFhwbHl4dUFKeG5YeGtwcE9WV1lBMGZtT3JjSGhrQ1dVOVpVMFFQQnMyWEc1MWlPTjdCZmVZTzFxL1RUNDlNU0xkZzRYdjhDMDhsTmViMGVTNnJQL2JFS0N2V0pvU0FUVzNxbmRkRmVrWFYxcURkL3EzZXp1NGwvT1ZUKzc0S0NoK1NacDVXbmQ1a0hRTyt5eUJLZllnSVdNdlpLcGg0d0hyak1VZWM4YWJaSXI2WnFFN0ljb2lpYW9XMHd5Rzk2TjBVZWx5aGh4dXhpaE5xelBQSGFjdHpNRzlvQTMvOFFacHFsSFgvSGJUN0Q0eEJMV3JtdGFqU21VMFB6K0dObWdKdW5RalhmRUVZZUkvZVo5dWY5ZzNpTzE3WXlrb1pqSzAwZnROUFdxakFkQ0wvUU9rY01nWUdPb0hBbmZMNGhCV2V2YTR2TWx6UVkyNEwxYmVielF6NWIwMWlUTE83WDZXRUtWYk12REkwRm5pMVllVGttRnBLdFRsek1JdWRCcno3Y3dBTWh2eGFRR282ODlyVTlGUHZIRG1zVDF2b3Y0VEs3UmluNlhoRzBsa1RhN3JUOCtQcnFLU3REQVFKZkF1N0d4Y21RaGZkOG5nL3hxaGFEeUFqZURMaXlCOHNoc0FUU05vZWVucmRkc1VGSDhqbDFYdVhPUjNveitDYkQyVjNxTzJubGI0SWZXajFwa2lRUURiYU5WRjJ1NFRqK3ZadG5HbnhLdS9hSXVmYXVJSVUyb1JsU09Tam1SWm5GNzh1bkRMbmpRWis5azhhWHR1eXppNEN4QlRoM2FsZnNrSndXL1JDOTYyLzlkRVRadUpYclFucWM0T1MvN3IwRXVtOG0wbndXUFVTc3VnTW45MkR6RlpROCtCakZ2YmVTZlNJR2FhMEE1aUtwbWsvVG4xQ3I1S1VTNVN0ZHhNZmdTOWV5WXBEeTRYMHUvN2dUQlVDVVlPNEhmQ3d5Y2FhRGpoZVBOckhTY0JQNGpmc0hYdGtQaUxncm1VdjJlT0pDS1lqR2cwcDg0cWovTXAzS2M0K2pqbUdpYzhWVmdkbUhmU1cyNXV4eGZlRzNXbWlZSnpMVyswL293YUpJdkdnWkFiOFRDbVExL2EyTG90SnBSNTFuWXdpQ2FDWDRhTlZ1UlhXVGxhbHQ4MWRxd2ZrYVJLaWd3SUNhUyt5TnBQSnBVNUZaY2ljMHRzYXZmS28rSWpaR0Jnb0F3VklvampEVTBJeEQzcS90c3gvN0hMSnVQdkNIdTJpNk1xTW1qY05ydGN0bUNkVURQOU9IY3ZuQ3YxMFBITExJaWpSb0l1dlpVVjgxY1JTZGFnVUwxL1c3Zk9ublZEMVk4aFlrWEtMMkk5RVRQOVZwY1RiUlBZaUZJNVFDaFdQemNxZHZpTUU0amdVRzgyVU1zMUp1dDl1citiZldwSkRJQjBrQkh4YTJvVlI3WFVSaDNBeGx3L1g2b0JKcEVIQXhXazRxMWtOSGJEMnNvS2NtM2RGRnRIRlZIdncvS0lBYUNKSVhLcXZWWEtzbVl5bkR2VngvTWNOU3Vha3A4UVY4R0hiRzFJdEJXMWl1WkZCNHFJeis4b29ETzVHS3ZVMzZaRjFZbnNYdkNkRFhaVHRvRVU0ejJiK3FHUEJ2WTJUZVlNTjBCRzRoaGxsRXVETnd0Y2dDc2p6VTl6WTN3ZElMMUpQUEJ1UEtTYy9iVG10Vk5QTzl6cWkrWUVtOXZIOTRFbUFhejVUYmdHbVNNQkJSUURVWVVYMlRTTmVMbVBsVHRKZkIwZHdXUlhsNllwaDdQMnRoaTFyL1dhNFJ3dlh0Qm9QSWhZUVY2cUtxUXZVWnpMMGhSQ0Q3d2JQVXhsQVYrWS9oQ3dRNGc9LS1RT3RWT3N2Qm9jdzdUamRKeEVDcnRBPT0%3D--043e803bc0f845303192aa5d916d1fd044857327',
+        domain: '.www.vinted.es'
+
+      })
+
+      // Habilita o deshabilita JavaScript
+      await page.setJavaScriptEnabled(true)
 
       await page.goto('https://www.vinted.es', { waitUntil: ['domcontentloaded', 'networkidle0'] })
 
@@ -72,6 +82,54 @@ export default class Puppeteer {
       return cookie ?? ''
     } catch (error) {
       console.error('Failed to get Vinted cookies:', error)
+      throw error
+    }
+  }
+
+  static async getAPIVinted(query: string, coockie: string): Promise<VintedItem[]> {
+
+    // call to Vinted API using puppeteer
+
+    try {
+      const page = await Puppeteer.browser?.newPage()
+      await page?.setExtraHTTPHeaders({
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:129.0) Gecko/20100101 Firefox/129.0',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/png,image/svg+xml,*/*;q=0.8',
+        'Accept-Language': 'es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3',
+        'Accept-Encoding': 'gzip, deflate, br, zstd',
+        'Connection': 'keep-alive',
+        'Upgrade-Insecure-Requests': '1',
+        'Sec-Fetch-Dest': 'document',
+        'Sec-Fetch-Mode': 'navigate',
+        'Sec-Fetch-Site': 'none',
+        'Sec-Fetch-User': '?1',
+        'Priority': 'u=0, i',
+        'Pragma': 'no-cache',
+        'Cache-Control': 'no-cache'
+      })
+
+      await page?.setCookie({
+        name: '_vinted_fr_session',
+        value: coockie,
+        domain: '.www.vinted.es'
+      })
+
+      await page?.goto(`https://www.vinted.es/api/v2/catalog/items?search_text=funko+${query}`, { waitUntil: 'domcontentloaded' })
+
+      const jsonData = await page?.evaluate(() => {
+        const preElement = document.querySelector('pre')
+        if (preElement) {
+          return JSON.parse(preElement.textContent!)
+        }
+        return null
+      })
+
+      await page?.close()
+
+      return jsonData.items ?? []
+
+    } catch (error) {
+      console.error('Failed to get API Vinted:', error)
       throw error
     }
   }
