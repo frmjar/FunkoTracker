@@ -55,7 +55,7 @@ const searchGoogle = async (search: string): Promise<FunkoProps[]> => {
 }
 
 const searchVinted = async (search: string): Promise<FunkoProps[]> => {
-  const results = await VintedAPI.search(search as string)
+  const results = await VintedAPI.searchNuevo(search as string)
 
   return results.map(f => {
     return {
@@ -98,10 +98,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     if (search === undefined || search.length < 3 || search === '') throw new Error('Search is required')
 
 
+    //const results = await wallapop.searchItems(null, search as string, null, null)
+    //const results = await searchGoogle(search as string)
+    //results.push(...await searchVinted(search as string))
+    //results.push(...await searchPuppetter(search as string))
 
-    const results = await searchGoogle(search as string)
-    results.push(...await searchVinted(search as string))
-    results.push(...await searchPuppetter(search as string))
+    const results = await searchVinted(search as string)
 
     funkosList = clearFunkos(search as string, results)
 
