@@ -77,6 +77,12 @@ export default class Puppeteer {
       const cookies = await page?.cookies()
       const cookie = cookies?.find(c => c.name === '_vinted_fr_session')?.value
 
+      cookies?.forEach(async c =>
+        await page?.setCookie(c)
+      )
+
+      await page?.goto(`https://www.vinted.es/api/v2/catalog/items?search_text=funko+haru`, { waitUntil: 'domcontentloaded' })
+
       await page?.close()
 
       return cookie ?? ''
