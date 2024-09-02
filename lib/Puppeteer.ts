@@ -211,7 +211,7 @@ export default class Puppeteer {
 
         document.querySelectorAll('div[data-async-context] > div').forEach(funko => {
           const web = funko.querySelectorAll('div.notranslate span') ? (funko.querySelectorAll('div.notranslate span')[1] as HTMLElement)?.innerText : undefined
-          let image = funko.querySelectorAll('a img') ? funko.querySelectorAll('a img')[1]?.getAttribute('src') ?? undefined : undefined
+          let image = funko.querySelector('.kb0PBd.cvP2Ce.LnCrMe')?.querySelector('img')?.getAttribute('src') ?? undefined
           image = image === 'data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==' ? undefined : image
 
           const link = funko.querySelector('a')?.getAttribute('href') ?? undefined

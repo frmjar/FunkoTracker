@@ -10,7 +10,7 @@ const clearFunkos = (search: string, funkosList: FunkoProps[]): FunkoProps[] => 
   const funkosValues = new Map<string, FunkoProps>()
 
   funkosList.forEach(f => {
-    if (f.web?.toLowerCase().includes('idealo') || f.web?.toLowerCase().includes('globerada')) return
+    if (f.web?.toLowerCase().includes('idealo') || f.web?.toLowerCase().includes('globerada') || f.web?.toLowerCase().includes('comparar')) return
     if (search.toLowerCase().split(' ').some(s => f.name?.toLowerCase().includes(s.toLowerCase()))) {
       f.price = formatPrice(f.price)
       funkosValues.set(f.name, f)
@@ -34,7 +34,7 @@ const searchGoogle = async (search: string): Promise<FunkoProps[]> => {
 
   const resultsFiltered = results.items.filter(f => {
     if (!f.pagemap) return false
-    return f.pagemap.metatags[0]['product:price:amount'] !== undefined
+    return f.pagemap.metatags[0]['product:price:amount'] !== undefined || f.pagemap.metatags[0]['og:price:amount'] !== undefined
   })
 
   const values = resultsFiltered.map(f => {
@@ -44,8 +44,8 @@ const searchGoogle = async (search: string): Promise<FunkoProps[]> => {
       imageAlt: f.pagemap.metatags[0]['og:image:alt'],
       link: f.link,
       web: f.displayLink,
-      price: f.pagemap.metatags[0]['product:price:amount'],
-      currency: f.pagemap.metatags[0]['product:price:currency'],
+      price: f.pagemap.metatags[0]['product:price:amount'] ?? f.pagemap.metatags[0]['og:price:amount'],
+      currency: f.pagemap.metatags[0]['product:price:currency'] ?? f.pagemap.metatags[0]['og:price:currency'],
       stock: f.pagemap.metatags[0]['product:availability'],
       debug: 'googleAPI'
     }
@@ -97,13 +97,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   try {
     if (search === undefined || search.length < 3 || search === '') throw new Error('Search is required')
 
-
     //const results = await wallapop.searchItems(null, search as string, null, null)
-    //const results = await searchGoogle(search as string)
-    //results.push(...await searchVinted(search as string))
-    //results.push(...await searchPuppetter(search as string))
-
-    const results = await searchVinted(search as string)
+    const results = await searchGoogle(search as string)
+    results.push(...await searchVinted(search as string))
+    results.push(...await searchPuppetter(search as string))
 
     funkosList = clearFunkos(search as string, results)
 

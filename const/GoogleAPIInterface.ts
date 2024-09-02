@@ -58,6 +58,8 @@ export interface Metatag {
     publisher?: string
     "msapplication-config"?: string
     "og:image:alt"?: string
+    "og:price:amount"?: string
+    "og:price:currency"?: string
     "product:weight:units"?: string
     "product:price:amount"?: string
     "product:pretax_price:amount"?: string

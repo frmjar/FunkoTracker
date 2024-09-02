@@ -16,6 +16,7 @@ export class VintedAPI {
         let coockies, funkos: VintedItem[] = []
 
         const crawler = await HCCrawler.launch({
+            args: ['--no-sandbox', '--disable-setuid-sandbox'],
             maxConcurrency: 1,
             onSuccess: (result: any) => {
                 coockies = result.cookies
@@ -34,6 +35,7 @@ export class VintedAPI {
 
         const crawler2 = await HCCrawler.launch({
             maxConcurrency: 1,
+            args: ['--no-sandbox', '--disable-setuid-sandbox'],
             evaluatePage: () => {
                 const preElement = document.querySelector('pre')
                 if (preElement) {
